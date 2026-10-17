@@ -65,10 +65,10 @@ export function StageGuard() {
   return (
     <section className="space-y-4">
       <div className="rounded-xl border border-line bg-panel p-4">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ice">Joe Brennan · Hermes / Paperclip</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ice">Stage 03 · Public surface & catch AST diff</p>
         <h2 className="mt-2 text-xl font-semibold">Public export & error-semantics diff</h2>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
-          A swarm deleted public API because nothing inside the repo called it. Other people&apos;s plugins did. Tests passed anyway. The same run changed how errors get handled in dozens of places. Tests missed that too. Before an agent branch opens a PR, this gate diffs public exports against main and fingerprints every catch.
+          Multi-agent refactors routinely delete exported functions that nothing inside the repo calls—breaking external plugins that import them—or silence catch blocks while unit tests still pass. Before a branch can open a PR, this gate diffs exported symbols and catch-site AST signatures against main.
         </p>
       </div>
 

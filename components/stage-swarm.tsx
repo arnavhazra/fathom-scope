@@ -63,7 +63,7 @@ export function StageSwarm({ scope, onCompileFirst }: { scope: ScopeResult | nul
   return (
     <section className="space-y-4">
       <div className="rounded-xl border border-amber/40 bg-amber/10 p-4">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-amber">Paperclip rule</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-amber">Verification rule</p>
         <h2 className="mt-1 text-xl font-semibold">Agents cannot mark their own task done.</h2>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/80">
           Every lane below already filed <span className="font-mono text-lime">Agent Self-Report: DONE</span>. The independent verifier re-parses the schema AST, runs a live HMAC oracle, and checks the public export contract. The self-report is not an input.

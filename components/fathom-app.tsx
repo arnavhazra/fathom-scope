@@ -57,7 +57,7 @@ export function FathomApp() {
               FS
             </span>
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">AI Frontrunners</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">Scope & Contract Desk</p>
               <p className="text-sm font-semibold leading-tight">FathomScope & ExportGuard</p>
             </div>
           </div>
@@ -92,7 +92,7 @@ export function FathomApp() {
             Discovery call in. Guarded architecture out.
           </h1>
           <p className="mt-3 text-sm leading-6 text-muted sm:text-base">
-            Tim Chao records the client on Fathom and hands the build to a white-label lane. Joe Brennan&apos;s rule sits on the other end: an agent branch cannot open a PR if a public export disappeared. This desk runs both.
+            Ingests a Fathom discovery call into a fixed-margin statement of work, Supabase RLS schema, and n8n workflow. On the build side, an AST gate blocks agent PRs whenever a public export is dropped or a catch block changes error propagation.
           </p>
         </section>
 

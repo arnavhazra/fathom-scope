@@ -321,13 +321,13 @@ export function handleRetellWebhook(rawBody: string): string {
     task({
       id: "peptide-voice",
       agent: "voice-tool-agent",
-      title: "Zero-retention Anthropic Fable router",
+      title: "Zero-retention Claude router",
       detail: "HIPAA path. No transcript persistence. Errors propagate.",
       agentClaim: "Zero-retention header set. No transcript write. Done.",
       check: "voice-contract",
       artifact: `export const ANTHROPIC_BETA = "zero-retention";
 
-export async function routeFableZeroRetention(callId: string): Promise<string> {
+export async function routeZeroRetentionModel(callId: string): Promise<string> {
   try {
     return await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -339,7 +339,7 @@ export async function routeFableZeroRetention(callId: string): Promise<string> {
   }
 }
 `,
-      requiredExports: ["routeFableZeroRetention"],
+      requiredExports: ["routeZeroRetentionModel"],
       needle: "zero-retention",
       checksRun: ["Public export contract", "Zero-retention voice contract"],
     }),
@@ -581,20 +581,20 @@ function known(id: RecordingId): ScopeResult {
         },
         {
           timestamp: "21:16",
-          speaker: "Tim Chao",
-          quote: "Zero retention. We route through Anthropic Fable with retention off, and we do not store the transcript.",
-          requirement: "HIPAA-safe zero-retention Anthropic Fable routing.",
+          speaker: "Alex Rivera",
+          quote: "Zero retention. We route through Claude Sonnet (zero-retention) with retention off, and we do not store the transcript.",
+          requirement: "HIPAA-safe zero-retention Anthropic Zero-Retention routing.",
         },
       ],
       integrations: [
         { system: "Retell", purpose: "Inbound voice triage on the clinic number", auth: "Webhook HMAC", risk: "Public verifyRetellSignature is already imported by a GHL plugin" },
         { system: "LabCorp", purpose: "Bloodwork webhook and panel match", auth: "Signed webhook", risk: "Retries plus name/DOB collisions" },
         { system: "GoHighLevel", purpose: "Pipeline stages the MAs already live in", auth: "Private integration token", risk: "Custom peptide fields are not native" },
-        { system: "Anthropic Fable", purpose: "Clinical routing with retention off", auth: "API key, zero-retention header", risk: "n8n execution data must not keep the transcript" },
+        { system: "Anthropic Zero-Retention", purpose: "Clinical routing with retention off", auth: "API key, zero-retention header", risk: "n8n execution data must not keep the transcript" },
         { system: "Supabase", purpose: "Cent ledger and panel flags", auth: "RLS per clinic member", risk: "A transcript column would break the HIPAA story" },
       ],
       constraints: [
-        { name: "HIPAA zero-retention", detail: "Fable is called with retention off. voice_sessions have no transcript column. n8n must not pin the call body.", severity: "critical" },
+        { name: "HIPAA zero-retention", detail: "Claude is called with retention off. voice_sessions have no transcript column. n8n must not pin the call body.", severity: "critical" },
         { name: "Cent budget", detail: "Voice spend is integer cents. A 6-second carrier increment still posts as whole cents, never a float.", severity: "critical" },
         { name: "Signed webhooks", detail: "Retell and LabCorp both require signature checks before a write.", severity: "high" },
         { name: "Public export stability", detail: "verifyRetellSignature stays exported. The clinic plugin does not live in this repo.", severity: "high" },
@@ -614,7 +614,7 @@ function known(id: RecordingId): ScopeResult {
         },
       ],
       sow: sow("Peptide clinic voice + labs + GHL", [
-        { name: "HIPAA threat model and zero-retention Fable router", hours: 12, deliverable: "No-transcript path, retention header, execution-log scrub" },
+        { name: "HIPAA threat model and zero-retention Claude router", hours: 12, deliverable: "No-transcript path, retention header, execution-log scrub" },
         { name: "Inbound Retell triage and tool calls", hours: 18, deliverable: "Protocol, labs-on-file, and after-hours disposition" },
         { name: "LabCorp webhook, signature, patient match", hours: 16, deliverable: "Accession plus flags, no raw HL7 at rest" },
         { name: "Integer cent budget ledger and hard stop", hours: 8, deliverable: "budget_ledger in cents, call cut off at cap" },
@@ -626,7 +626,7 @@ function known(id: RecordingId): ScopeResult {
         { name: "Retell Call Ended", type: "n8n-nodes-base.webhook", parameters: { httpMethod: "POST", path: "retell/call-ended" } },
         { name: "Verify HMAC", type: "n8n-nodes-base.code", parameters: { note: "Call the public verifyRetellSignature export. Reject unsigned bodies." } },
         { name: "Cent Budget Gate", type: "n8n-nodes-base.if", parameters: { note: "Continue only when balance_cents plus increment stays under max_budget_cents." } },
-        { name: "Fable Zero Retention", type: "n8n-nodes-base.httpRequest", parameters: { url: "https://api.anthropic.com/v1/messages", header: "anthropic-beta: zero-retention", sendBody: false } },
+        { name: "Claude Zero Retention", type: "n8n-nodes-base.httpRequest", parameters: { url: "https://api.anthropic.com/v1/messages", header: "anthropic-beta: zero-retention", sendBody: false } },
         { name: "LabCorp Panel Check", type: "n8n-nodes-base.httpRequest", parameters: { note: "Match accession. Never synthesize a panel." } },
         { name: "GHL Opportunity Upsert", type: "n8n-nodes-base.httpRequest", parameters: { url: "https://services.leadconnectorhq.com/opportunities/upsert", idempotencyKey: "{{$json.callId}}" } },
         { name: "Respond 200", type: "n8n-nodes-base.respondToWebhook", parameters: { responseCode: 200 } },
@@ -815,7 +815,7 @@ const CATALOG: Array<{ test: RegExp; item: Integration }> = [
   { test: /labcorp/i, item: { system: "LabCorp", purpose: "Lab result intake", auth: "Signed webhook", risk: "Do not infer a missing panel" } },
   { test: /gohighlevel|\bghl\b/i, item: { system: "GoHighLevel", purpose: "CRM stage sync", auth: "Private integration", risk: "Idempotent upsert required" } },
   { test: /retell|voice triage/i, item: { system: "Retell", purpose: "Inbound voice", auth: "Webhook HMAC", risk: "Keep the signature helper exported" } },
-  { test: /anthropic|fable|zero[- ]retention/i, item: { system: "Anthropic Fable", purpose: "Model routing", auth: "API key", risk: "Zero retention, no transcript at rest" } },
+  { test: /anthropic|claude|zero[- ]retention/i, item: { system: "Anthropic Zero-Retention", purpose: "Model routing", auth: "API key", risk: "Zero retention, no transcript at rest" } },
   { test: /carecredit/i, item: { system: "CareCredit", purpose: "Financing pre-qualification", auth: "Provider API", risk: "Do not invent an approval" } },
   { test: /dentrix|opendental/i, item: { system: "Dentrix / OpenDental", purpose: "Practice management bridge", auth: "Per-site credentials", risk: "Idempotent chair writes" } },
   { test: /twilio|text-back|missed-call/i, item: { system: "Twilio", purpose: "Missed-call messaging", auth: "Twilio signature", risk: "TCPA consent" } },

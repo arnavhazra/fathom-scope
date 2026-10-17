@@ -29,12 +29,12 @@ export function verifyRetellSignature(
   return timingSafeEqualHex(expected, signature);
 }
 
-export async function routeFableZeroRetention(
+export async function routeZeroRetentionModel(
   payload: ClinicWebhookPayload,
 ): Promise<string> {
   try {
     assertNoPhiPersistence(payload);
-    return await callFable(payload);
+    return await callZeroRetentionModel(payload);
   } catch (err) {
     throw new HipaaRoutingError(err);
   }
@@ -75,7 +75,7 @@ function assertNoPhiPersistence(payload: ClinicWebhookPayload): void {
   }
 }
 
-function callFable(payload: ClinicWebhookPayload): Promise<string> {
+function callZeroRetentionModel(payload: ClinicWebhookPayload): Promise<string> {
   return Promise.resolve(payload.callId);
 }
 
@@ -121,7 +121,7 @@ const SWALLOWED_BUDGET = `  } catch (err) {
     return cap;
   }`;
 
-const SWALLOWED_FABLE = `  } catch (err) {
+const SWALLOWED_ROUTE = `  } catch (err) {
     console.error(err);
     return "swallowed";
   }`;
@@ -132,7 +132,7 @@ function mutateCatches(source: string): string {
     `  } catch (err) {
     throw new HipaaRoutingError(err);
   }`,
-    SWALLOWED_FABLE,
+    SWALLOWED_ROUTE,
   );
   next = mustReplace(
     next,

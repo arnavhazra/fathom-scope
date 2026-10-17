@@ -1,6 +1,6 @@
 # FathomScope & ExportGuard
 
-White-label desk for AI Frontrunners. A Fathom discovery call compiles into a fixed-margin statement of work, Supabase SQL with row-level security, and an n8n workflow. A separate verifier checks agent artifacts. A public-export diff blocks a pull request when an agent deletes a symbol other people's plugins still import, or when catch-site error behavior changes.
+White-label desk. A Fathom discovery call compiles into a fixed-margin statement of work, Supabase SQL with row-level security, and an n8n workflow. A separate verifier checks agent artifacts. A public-export diff blocks a pull request when an agent deletes a symbol other people's plugins still import, or when catch-site error behavior changes.
 
 No login. Three stages on `/`.
 

@@ -18,7 +18,7 @@ assert(
       "type:ClinicWebhookPayload",
       "interface:BudgetCap",
       "function:verifyRetellSignature",
-      "function:routeFableZeroRetention",
+      "function:routeZeroRetentionModel",
       "function:ingestLabcorpWebhook",
       "function:applyCentBudget",
     ].join(","),
@@ -27,7 +27,7 @@ assert(
 const mainSites = extractErrorSites(tokenize(main)).map((site) => `${site.key}:${site.behavior}`);
 assert(
   mainSites.join(",") ===
-    "routeFableZeroRetention#0:wrap-and-throw,ingestLabcorpWebhook#0:rethrow,applyCentBudget#0:rethrow",
+    "routeZeroRetentionModel#0:wrap-and-throw,ingestLabcorpWebhook#0:rethrow,applyCentBudget#0:rethrow",
   `unexpected main catches: ${mainSites.join(", ")}`,
 );
 
